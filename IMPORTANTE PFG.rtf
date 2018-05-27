@@ -1,0 +1,117 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red52\green52\blue52;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c26667\c26667\c26667;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 INSTALACION KALI\
+https://www.youtube.com/watch?v=dKwh_rj1Gf0\
+\
+\
+1- encontrar la ip \
+2- meterla en wireshark\
+3- demostrar un ping de -3 paquetes \
+4- implementar el ipspoof usando iptables\
+5-demostrar ipspoof \
+\
+\
+3 maquinas -> 1 ATACANTE-> 91.133\
+\
+			ip.addr == 192.168.91.133 and icmp\
+\
+\
+		       2 USAREMOS SU IP PARA SIMULARLA-> 91.128\
+\
+			ip.addr == 192.168.91.128 and icmp\
+\
+		       3 VICTIMA-> 91.129\
+\
+			ip.addr == 192.168.91.129 and icmp\
+\
+Comunicaci\'f3n entre maquinas\
+\
+Desde atacante a v\'edctima ->  ping -c 3 92.168.91.129 MIRAR LOS PAQUETES EN LA MAQUINA DONDE SE ENVIAN CON WIRESHARK\
+\
+Sudo potables -t nat -A POSTROUTING .j SNAT - -to-source 192.168.91.128\
+\
+INFORMARSE DE NAT https://netfilter.org/documentation/HOWTO/es/NAT-HOWTO-2.html\
+\
+https://sandilands.info/sgordon/address-spoofing-with-iptables-in-linux\
+\
+\
+DNS \
+http://highsec.es/2013/07/man-in-the-middle-mitm-suplantacion-de-dns-dns-spoofing-y-set/\
+\
+\
+https://null-byte.wonderhowto.com/how-to/tutorial-dns-spoofing-0167796/\
+\
+\
+https://www.youtube.com/watch?v=gcEhFQNleNk\
+herramientas\
+\
+\pard\pardeftab720\sl660\sa400\partightenfactor0
+
+\fs56 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Setoolkit\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \
+Setoolskit->https://pablokribo.wordpress.com/2016/06/20/install-setoolkit-on-ubuntu-14-04/\
+https://www.youtube.com/watch?v=iOZoCSmCiQ8\
+\
+INSTALADO EN ARCHIVOS->EQUIPO->OPT->SET \
+terminal->CD /OPT/SET\
+		setoolkit\
+Si da fallos usar sudo setoolkit\
+\
+\
+\pard\pardeftab720\sl660\sa400\partightenfactor0
+
+\fs56 \cf2 \cb3 \expnd0\expndtw0\kerning0
+Ettercap\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\fs24 \cf2 http://curiosidadesvarias.portalfree.net/manual-de-como-instalar-ettercap-grafico-en-linux-ubuntu-kubuntu/#codesyntax_3\cf0 \cb1 \kerning1\expnd0\expndtw0 \
+\
+\
+\
+\
+\
+\
+\
+https://www.youtube.com/watch?v=EsSrmy1CPPM\
+\
+https://www.youtube.com/watch?v=-p6WYUNYNws\
+\
+Detectar y evitar ARP\
+http://4lfa-om3ga.blogspot.com.es/2012/11/como-detectar-y-evitar-un-arp-spoofing.html\
+\
+http://www.vicolinker.net/evitar-ataques-de-ip-spoofing-en-el-servicio-dns-centos/\
+\
+https://www.1and1.es/digitalguide/servidores/seguridad/ip-spoofing-fundamentos-y-contramedidas/\
+\
+https://medium.com/@marvin.soto/qu\'e9-es-el-envenenamiento-arp-o-ataque-arp-spoofing-y-c\'f3mo-funciona-7f1e174850f2\
+\
+NMAP\
+https://www.youtube.com/watch?v=dny_H6MZlts\
+\
+https://sandilands.info/sgordon/address-spoofing-with-iptables-in-linux\
+\
+BLUETOOTH\
+https://www.youtube.com/watch?v=OyczAIut06k\
+\
+\
+NAT \
+https://netfilter.org/documentation/HOWTO/es/NAT-HOWTO-2.html\
+\
+http://highsec.es/2013/07/man-in-the-middle-mitm-suplantacion-de-dns-dns-spoofing-y-set/\
+\
+\
+https://www.welivesecurity.com/la-es/2012/06/18/dns-spoofing/\
+\
+\
+\
+http://hackingplayground.blogspot.com.es/2015/05/hacking-facebooktwitter-with-ettercap.html\
+http://hackingplayground.blogspot.com.es/2015/06/hack-all-websites-on-go-replace-all.html\
+http://hackingplayground.blogspot.com.es/2015/04/url-and-images-interception-on-lan-via.html}
