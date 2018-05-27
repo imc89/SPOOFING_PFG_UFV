@@ -22,7 +22,7 @@ import sys
 import os
 # SE IMPORTAN FUNCIONES PARA TRABAJAR CON FECHA Y HORA
 import time
-# EJECUCIÓN DE COMANDOS EN PARALELO (TUBERIAS)
+# EJECUCION DE COMANDOS EN PARALELO (TUBERIAS)
 from subprocess import Popen, PIPE
 # SE IMPORTA NMAP
 import nmap
@@ -45,7 +45,7 @@ try:
 except:
 	pass
 
-# FUNCION IMPRIMIR HOSTS
+# FUNCION PARA MOSTRAR LOS HOST DE LA RED
 def AnalisisRed():
 	print'\nEQUIPOS DE LA RED'
 #RECORREMOS TODOS LOS HOST ANTERIORMENTE GUARDADOS 
@@ -56,25 +56,26 @@ def AnalisisRed():
 			print "\tESTADO DEL HOST:", nm[host]['status']['state']
 			print "\n\tIP DEL HOST:", host
 
-		try:
-			print "\tMAC DEL HOST:", nm[host]['addresses']['mac']
-		except:
-			print "MAC DESCONOCIDA"
+			try:
+				print "\tMAC DEL HOST:", nm[host]['addresses']['mac']
+			except:
+				print "MAC DESCONOCIDA"
 	print'\nPAQUETES'
 
 def returnGateway():
-#OBTENER LA PUERTA DE ENLACE A TRAVES DE EXPRESION REGUALR
+#OBTENER LA PUERTA DE ENLACE
 # FUENTE 
 # https://www.lawebdelprogramador.com/codigo/Python/v4490-Obtener-la-puerta-de-enlace-o-gateway-de-nuestro-Linux.html
 	try:
-# GUARDAMOS LA IP DEL ROUTER CAPTURANDOLA CON commands.getoutput
+# SE CAPTURA LA IP DEL ROUTER	
 		result = commands.getoutput("/sbin/route -n").splitlines()
 	except:
 		raise
 
 	for line in result:
+# SE BUSCA LA LINEA 0.0.0.0		
 		if line.split()[0]=="0.0.0.0":
-
+# SE USA LA EXPRESION REGULAR PARA DETECTAR EL CAMPO DE IP GATEWAY 
 			if re.match("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$", line.split()[1]):
 				return line.split()[1]
 
@@ -86,28 +87,30 @@ def pause():
 	programPause = input("PULSAR 'ENTER' PARA CONTINUAR.")
 
 
-def AnalisisMac(mac_atacante):
-# ARRAY DONDE SE GUARDARAN LAS IP DE LOS POSIBLES ATACANTES
+def Fichero(mac_atacante):
+# SE CREA UN FICHERO DONDE SE GUARDAN LOS DATOS DEL ATACANTE
 	ips_atacantes = list()
 	try:
-# SE CREA UN FICHERO LLAMADO LOG EN EL QUE SE ESCRIBIRÁ EL TEXTO 
-		fichero = open('LOG - '+fecha_hora+'.txt','w')
-		fichero.write("\n\tSE HA DETECTADO UN ATAQUE DE IP SPOOFING")
+# SE CREA EL ARCHIVO LOG 		
+		log = open('LOG_'+fecha_hora+'.txt','w')
+		log.write("\n\tSE HA DETECTADO UN ATAQUE IP SPOOFING")
 	except:
 		pass
-# SE IMPRIMEN LOS HOSTS ATACANTES POR PANTALLA Y SE ESCRIBEN EN EL FICHERO
+	
 	for host in nm.all_hosts():
 		if 'mac' in nm[host]['addresses']:
 			if (nm[host]['addresses']['mac'] == mac_atacante.upper()):
-				print "\n\tDatos almacenados del atacante: "
+				print "\n\tDATOS DEL ATACANTE: "
 				print  "\tIP:", host
 				print "\tSTATUS:", nm[host]['status']['state']
 				print "\tMAC:", nm[host]['addresses']['mac']
-				fichero.write("\n\n\tDATOS DE ATAQUE ALMACENADOS: \n")
-				fichero.write("\n\tIP:\t\t"+ host)
-				fichero.write("\n\tMAC:\t"+ nm[host]['addresses']['mac'])
+				log.write("\n\n\tDATOS DE ATAQUE ALMACENADOS: \n")
+				log.write("\n\tIP:\t\t"+ host)
+				log.write("\n\tMAC:\t"+ nm[host]['addresses']['mac'])
 				ips_atacantes.append(host)
-				fichero.close()
+# SE CIERRA EL ARCHIVO 				
+				log.close()
+# SE LLAMA A LA FUNCION DE BLOQUEO 				
 				Bloqueo(mac_atacante.upper(), ips_atacantes)
 
 
@@ -116,21 +119,19 @@ def Bloqueo(mac_atacante, ips_atacantes):
 # http://www.hackplayers.com/2016/02/filtrado-de-macs-con-iptables-linux.html
 # https://stackoverflow.com/questions/46705647/python-to-remove-iptables-rule-at-specific-time
 	try:
-
-		print "\n\tBloqueando conexiones entrantes de la MAC {0} ...".format(mac_atacante)
+# SE USA LA ACCIÓN DROP PARA DENEGAR ACCESOS
+		print "\n\tBLOQUEANDO CONEXIÓN DE LA MAC : {0}".format(mac_atacante)
 		os.system('iptables -A INPUT -i ens33 -m mac --mac-source '+ mac_atacante +' -j DROP')
 
 		for ip_atacante in ips_atacantes:
-			print "\tBloqueando conexiones entrantes de la IP {0} ...".format(ip_atacante)
+			print "\tBLOQUEANDO CONEXION  DE LA IP : {0} ".format(ip_atacante)
 			os.system('iptables -A INPUT -s '+ ip_atacante +' -j DROP')
-
-			print "\tBloqueando conexiones salientes hacia la IP {0} ...".format(ip_atacante)
 			os.system('iptables -A OUTPUT -s '+ ip_atacante +' -j DROP')
 
-			print "\tBloqueando cualquier paquete TCP que no se ha iniciado con el Flag SYN activo..."
+			print "\tBLOQUEO DE PAQUETES TCP."
 			os.system('iptables -A INPUT -p tcp ! --syn -m state --state NEW -j DROP')
 
-			print "\nSe han aplicado reglas para bloquear al atacante.\n"
+			print "\nATAQUE BLOQUEADO CON EXITO.\n"
 
 			pause()
 	except:
@@ -146,21 +147,21 @@ def PingRouter():
 	print "\n-HACIENDO PING ICMP A ROUTER-\t"
 	send(pingr)
 
-# 
+# GUARDAMOS Y DETECTAMOS LOS DATOS DE LOS PAQUETES ENVIADOS POR EL ROUTER
 def PaquetesRouter(pkt):
 	ip_router = returnGateway()
 	mac_router = None
+# IP Y MAC DEL PAQUETE 
 	ip_pkt = pkt[IP].src
 	mac_pkt = (pkt.src).upper()
-
-# # obtengo la mac del router
+# MAC DEL ROUTER
 	for host in nm.all_hosts():
 		if 'mac' in nm[host]['addresses']:
 			if host == ip_router:
 				mac_router = nm[host]['addresses']['mac']
 	if ip_pkt == ip_router and mac_pkt == mac_router:
 	        return True
-	
+# PAQUETE ENVIADO POR EL ROUTER
 	elif ip_pkt != ip_router and mac_pkt == mac_router:
 	        return True
 	
@@ -196,13 +197,13 @@ def AnalisisPaquetes(pkt):
 
  				if val == pkt.src:
 # IMPRIMIR LOS VALORES 
- 					print "\tIP ALMACENADA: ",format(key), "\n\tIP PAQUETE: ",format(pkt[IP].src)
+ 					print "\t IP ALMACENADA: ",format(key), "\n\tIP PAQUETE: ",format(pkt[IP].src)
 
  					print "\n\tMAC ALMACENADA: ", format(val)
 # SI LA FUNCION ATAQUE DETECTA UNO
  					if Ataque(key, val, pkt[IP].src, pkt.src):
  						print '\n\nSE HA DETECTADO UN ATAQUE DE IP SPOOFING'
- 						AnalisisMac(pkt.src)
+ 						Fichero(pkt.src)
  						return None
 # SI NO DETECTA ATAQUE 					
  					else:
@@ -236,4 +237,3 @@ if __name__ == '__main__':
 
 
 			
-

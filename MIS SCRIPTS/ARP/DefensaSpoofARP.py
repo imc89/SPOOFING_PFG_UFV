@@ -7,6 +7,11 @@ __version__ = "1.0"
 __email__ = "mci.m89@gmail.com"
 __status__ = "Finished"
 
+__author__ = "Iñigo Montánchez Crespo"
+__version__ = "1.0"
+__email__ = "mci.m89@gmail.com"
+__status__ = "Finished"
+
 # LOGGING PROPORCIONA UN CONJUNTO DE FUNCIONES PARA EL REGISTRO DE EVENTOS 
 # (INFO, DEBUG, ERROR, WARNING ...)
 import logging
@@ -125,9 +130,11 @@ def Bloqueo(ip_atacante, mac_atacante, ip_router, mac_router):
 # http://www.hackplayers.com/2016/02/filtrado-de-macs-con-iptables-linux.html
 # https://stackoverflow.com/questions/46705647/python-to-remove-iptables-rule-at-specific-time
     try:
-        print "\n\tCORRIGIENDO ATAQUE ARP..."
+        print "\n[+]\tSaneando cache ARP..."
         os.system("ip -s -s neigh flush all")
         os.system("arp -s "+ ip_router + " " + mac_router)
+        print "\n[+]\tMostrando cache ARP"
+        os.system("arp -a")
 
         print "\n\tBLOQUEANDO CONEXIÓN DE LA MAC : {0} ...".format(mac_atacante)
         os.system('iptables -A INPUT -i ens33 -m mac --mac-source '+ mac_atacante +' -j DROP')
