@@ -7,11 +7,6 @@ __version__ = "1.0"
 __email__ = "mci.m89@gmail.com"
 __status__ = "Finished"
 
-__author__ = "Iñigo Montánchez Crespo"
-__version__ = "1.0"
-__email__ = "mci.m89@gmail.com"
-__status__ = "Finished"
-
 # LOGGING PROPORCIONA UN CONJUNTO DE FUNCIONES PARA EL REGISTRO DE EVENTOS 
 # (INFO, DEBUG, ERROR, WARNING ...)
 import logging
@@ -29,7 +24,7 @@ import os
 import time
 # EJECUCIÓN DE COMANDOS EN PARALELO (TUBERÍAS)
 from subprocess import Popen, PIPE
-# SE IMPORTAN NMAP
+# SE IMPORTA NMAP
 import nmap
 # PERMITE RECONOCER EXPRESIONES REGULARES
 import re
@@ -49,12 +44,11 @@ except:
     pass
 
 # FUNCION PARA MOSTRAR LOS HOST DE LA RED
-
 def AnalisisRed():
     print'\nEQUIPOS DE LA RED'
 #RECORREMOS TODOS LOS HOST ANTERIORMENTE GUARDADOS 
     for host in nm.all_hosts():
-#SI EL HOST ESTÁ EN ESTADO ACTIVO 
+#SI EL HOST ESTA EN ESTADO ACTIVO 
         if nm[host]['status']['state'] != "down":
             print "\tESTADO DEL HOST:", nm[host]['status']['state']
             print "\n\tIP DEL HOST:", host
@@ -72,12 +66,15 @@ def returnGateway():
 # https://www.lawebdelprogramador.com/codigo/Python/v4490-Obtener-la-puerta-de-enlace-o-gateway-de-nuestro-Linux.html
     result = ""
     try:
+# SE CAPTURA LA IP DEL ROUTER           
         result = commands.getoutput("/sbin/route -n").splitlines()
     except:
         raise
 
     for line in result:
+# SE BUSCA LA LINEA 0.0.0.0             
         if line.split()[0]=="0.0.0.0":
+# SE USA LA EXPRESION REGULAR PARA DETECTAR EL CAMPO DE IP GATEWAY 
             if re.match("^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$", line.split()[1]):
                 return line.split()[1]
 
@@ -95,6 +92,7 @@ def Fichero(mac_atacante):
     mac_router = ""
 
     try:
+# SE CREA EL ARCHIVO LOG        
         log = open('LOG_'+fecha_hora+'.txt','w')
         log.write("\n\tSE HA DETECTADO UN ATAQUE ARP SPOOFING")
     except:
@@ -120,6 +118,7 @@ def Fichero(mac_atacante):
 
             elif(nm[host]['addresses']['ipv4'] == ip_router):
                 mac_router = nm[host]['addresses']['mac']
+# SE CIERRA EL ARCHIVO                 
     log.close()
     Bloqueo(ip_atacante, mac_atacante, ip_router, mac_router)
 
@@ -130,7 +129,7 @@ def Bloqueo(ip_atacante, mac_atacante, ip_router, mac_router):
 # http://www.hackplayers.com/2016/02/filtrado-de-macs-con-iptables-linux.html
 # https://stackoverflow.com/questions/46705647/python-to-remove-iptables-rule-at-specific-time
     try:
-        print "\n[+]\tSaneando cache ARP..."
+        print "\n[+]\LIMPIANDO TABLAS ARP..."
         os.system("ip -s -s neigh flush all")
         os.system("arp -s "+ ip_router + " " + mac_router)
         print "\n[+]\tMostrando cache ARP"
