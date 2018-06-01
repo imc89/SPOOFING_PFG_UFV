@@ -40,6 +40,8 @@ nm.scan(hosts = '192.168.0.1/24', arguments = '-PE -sP -n -T5')
 try:
 	pkts = PcapWriter("paquetes.pcap", append=True, sync=True)
 #PARA GUARDAR EL MOMENTO DEL POSIBLE ATAQUE 
+# FUENTE
+# https://www.tutorialspoint.com/python/time_strftime.htm
 	fecha_hora = time.strftime("%c")
 
 except:
@@ -101,7 +103,7 @@ def Fichero(mac_atacante):
 		if 'mac' in nm[host]['addresses']:
 			if (nm[host]['addresses']['mac'] == mac_atacante.upper()):
 				print "\n\tDATOS DEL ATACANTE: "
-				print  "\tIP:", host
+				print "\tIP:", host
 				print "\tSTATUS:", nm[host]['status']['state']
 				print "\tMAC:", nm[host]['addresses']['mac']
 				log.write("\n\n\tDATOS DE ATAQUE ALMACENADOS: \n")

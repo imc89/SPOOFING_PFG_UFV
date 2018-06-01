@@ -39,6 +39,8 @@ nm.scan(hosts = '192.168.0.1/24', arguments = '-n -sP -PE -T5')
 try:
     pkts = PcapWriter("temp.pcap", append=True, sync=True)
 #PARA GUARDAR EL MOMENTO DEL POSIBLE ATAQUE 
+# FUENTE
+# https://www.tutorialspoint.com/python/time_strftime.htm
     fecha_hora = time.strftime("%c")
 except:
     pass
@@ -129,10 +131,10 @@ def Bloqueo(ip_atacante, mac_atacante, ip_router, mac_router):
 # http://www.hackplayers.com/2016/02/filtrado-de-macs-con-iptables-linux.html
 # https://stackoverflow.com/questions/46705647/python-to-remove-iptables-rule-at-specific-time
     try:
-        print "\n[+]\LIMPIANDO TABLAS ARP..."
+        print "\nLIMPIANDO TABLAS ARP"
         os.system("ip -s -s neigh flush all")
         os.system("arp -s "+ ip_router + " " + mac_router)
-        print "\n[+]\tMostrando cache ARP"
+        print "\nMOSTRANDO TABLAS ARP LIMPIAS"
         os.system("arp -a")
 
         print "\n\tBLOQUEANDO CONEXIÓN DE LA MAC : {0} ...".format(mac_atacante)
